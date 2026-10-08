@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+    <!-- Unified DishVerse Responsive Header Navbar Fragment -->
+    <nav class="navbar navbar-expand-lg navbar-dark navbar-custom py-3" th:fragment="navbar">
+        <div class="container">
+            <a class="navbar-brand" href="/"><i class="fa-solid fa-utensils me-2"></i>DishVerse</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/recipes"><i class="fa-solid fa-compass me-1"></i> Discover</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="/recipes/create"><i class="fa-solid fa-plus-circle me-1"></i> Share Recipe</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="/collections"><i class="fa-solid fa-bookmark me-1"></i> My Bookmarks</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="hasAuthority('ROLE_ADMIN')">
+                        <a class="nav-link text-warning fw-bold" href="/admin/dashboard"><i class="fa-solid fa-shield-halved me-1"></i> Admin Panel</a>
+                    </li>
+                </ul>
+                <div class="d-flex align-items-center gap-2 mt-3 mt-lg-0">
+                    <div sec:authorize="isAnonymous()">
+                        <a href="/login" class="btn btn-outline-light me-2 btn-sm px-3">Log In</a>
+                        <a href="/register" class="btn btn-accent btn-sm px-3">Sign Up</a>
+                    </div>
+                    <div sec:authorize="isAuthenticated()" class="dropdown">
+                        <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-user-circle me-1"></i> <span sec:authentication="name">User</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end shadow">
+                            <li><a class="dropdown-item" href="/dashboard"><i class="fa-solid fa-gauge me-2"></i> Dashboard</a></li>
+                            <li><a class="dropdown-item" href="/recipes/my-recipes"><i class="fa-solid fa-book-open me-2"></i> My Recipes</a></li>
+                            <li><a class="dropdown-item" href="/profile"><i class="fa-solid fa-user-gear me-2"></i> Edit Profile</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li>
+                                <form th:action="@{/logout}" method="post">
+                                    <button class="dropdown-item text-danger" type="submit"><i class="fa-solid fa-right-from-bracket me-2"></i> Log Out</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Unified DishVerse Footer Fragment -->
+    <footer class="footer mt-auto" th:fragment="footer">
+        <div class="container text-center">
+            <p class="mb-1 fw-bold text-white fs-6">DishVerse – Online Recipe Sharing Platform</p>
+            <p class="small text-muted mb-2">A World of Recipes • Handcrafted for food lovers & home chefs.</p>
+            <div class="d-flex justify-content-center gap-3 small mb-3">
+                <a href="/" class="text-decoration-none">Home</a>
+                <a href="/recipes" class="text-decoration-none">Explore Catalog</a>
+                <a href="/login" class="text-decoration-none">Account Login</a>
+            </div>
+            <p class="small text-secondary mb-0">Built with Java 17, Spring Boot, Spring Security, MySQL & Thymeleaf.</p>
+        </div>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Saved Collection — DishVerse</title>
+    <!-- Bootstrap 5 & FontAwesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom DishVerse CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <!-- Unified Header Navbar -->
+    <div th:replace="~{fragments/common :: navbar}"></div>
+
+    <div class="container my-5">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold page-title mb-1"><i class="fa-solid fa-bookmark text-danger me-2"></i>My Bookmarked Collection</h2>
+                <p class="text-muted mb-0">Quick access to your saved favorite recipes</p>
+            </div>
+            <a href="/recipes" class="btn btn-outline-accent btn-sm px-3">Browse More Recipes</a>
+        </div>
+
+        <!-- Empty State -->
+        <div th:if="${collections.empty}" class="empty-state">
+            <i class="fa-regular fa-bookmark empty-state-icon text-warning"></i>
+            <h4 class="fw-bold mb-2">Your Collection is Empty</h4>
+            <p class="text-muted mb-3">Explore the catalog and bookmark dishes to build your personal cookbook!</p>
+            <a href="/recipes" class="btn btn-accent btn-sm px-4"><i class="fa-solid fa-compass me-1"></i> Explore Catalog</a>
+        </div>
+
+        <!-- Bookmarked Cards Grid -->
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" th:if="${!collections.empty}">
+            <div class="col" th:each="item : ${collections}">
+                <div class="card recipe-card h-100">
+                    <div class="recipe-img-container">
+                        <img th:if="${item.recipe.imageUrl != null and (item.recipe.imageUrl.startsWith('http://') or item.recipe.imageUrl.startsWith('https://'))}" th:src="${item.recipe.imageUrl}" class="recipe-img" alt="Recipe Image">
+                        <img th:if="${item.recipe.imageUrl != null and !(item.recipe.imageUrl.startsWith('http://') or item.recipe.imageUrl.startsWith('https://'))}" th:src="@{'/uploads/recipes/' + ${item.recipe.imageUrl}}" class="recipe-img" alt="Recipe Image">
+                        <img th:if="${item.recipe.imageUrl == null or item.recipe.imageUrl.isEmpty()}" src="https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&w=600&q=80" class="recipe-img" alt="Default Food">
+                    </div>
+                    <div class="card-body d-flex flex-column p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge-category" th:text="${item.recipe.description != null and item.recipe.description.startsWith('[Category:') ? item.recipe.description.substring(11, item.recipe.description.indexOf(']')) : 'Saved'}">Category</span>
+                            <span class="small text-warning fw-bold"><i class="fa-solid fa-star me-1"></i>4.5</span>
+                        </div>
+                        <h5 class="card-title fw-bold mb-2 text-dark" th:text="${item.recipe.title}">Recipe Title</h5>
+                        <p class="card-text text-muted small mb-3" th:text="${#strings.abbreviate(item.recipe.description != null and item.recipe.description.startsWith('[Category:') ? item.recipe.description.substring(item.recipe.description.indexOf(']') + 2) : item.recipe.description, 90)}">Description</p>
+                        
+                        <div class="mt-auto d-flex justify-content-between align-items-center pt-3 border-top">
+                            <a th:href="@{'/recipes/details/' + ${item.recipe.id}}" class="btn btn-sm btn-accent px-3">View Recipe</a>
+                            
+                            <form th:action="@{'/collections/remove/' + ${item.recipe.id}}" method="post">
+                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Remove Bookmark"><i class="fa-solid fa-trash-can me-1"></i> Remove</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unified Footer Fragment -->
+    <div th:replace="~{fragments/common :: footer}"></div>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/bootstrap.bundle.min.js"></script>
+</body>
+</html>

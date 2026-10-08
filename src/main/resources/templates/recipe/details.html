@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${recipe.title} + ' — DishVerse'">Recipe Details</title>
+    <!-- Bootstrap 5 & FontAwesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom DishVerse CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <!-- Unified Header Navbar -->
+    <div th:replace="~{fragments/common :: navbar}"></div>
+
+    <div class="container my-4">
+
+        <!-- Flash Alert Messages -->
+        <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show">
+            <i class="fa-solid fa-circle-check me-2"></i><span th:text="${successMessage}">Success</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        <div th:if="${errorMessage}" class="alert alert-danger alert-dismissible fade show">
+            <i class="fa-solid fa-circle-exclamation me-2"></i><span th:text="${errorMessage}">Error</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+
+        <!-- Recipe Hero Banner -->
+        <div class="hero-banner mb-4">
+            <img th:if="${recipe.imageUrl != null and (recipe.imageUrl.startsWith('http://') or recipe.imageUrl.startsWith('https://'))}" th:src="${recipe.imageUrl}" class="hero-img" alt="Recipe Banner">
+            <img th:if="${recipe.imageUrl != null and !(recipe.imageUrl.startsWith('http://') or recipe.imageUrl.startsWith('https://'))}" th:src="@{'/uploads/recipes/' + ${recipe.imageUrl}}" class="hero-img" alt="Recipe Banner">
+            <img th:if="${recipe.imageUrl == null or recipe.imageUrl.isEmpty()}" src="https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&w=1200&q=80" class="hero-img" alt="Default Food">
+            
+            <div class="hero-overlay d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-end gap-3">
+                <div>
+                    <span class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-semibold mb-2" th:text="${recipe.description != null and recipe.description.startsWith('[Category:') ? recipe.description.substring(11, recipe.description.indexOf(']')) : 'Recipe'}">Category</span>
+                    <h1 class="fw-bold mb-2 text-white" th:text="${recipe.title}">Recipe Title</h1>
+                    <p class="mb-0 small text-light opacity-90">
+                        <i class="fa-solid fa-circle-user me-1 text-warning"></i> Shared by <strong th:text="${recipe.user.name}">Author</strong> • 
+                        <i class="fa-solid fa-calendar-days me-1 text-warning ms-2"></i> <span th:text="${#temporals.format(recipe.createdAt, 'dd MMM yyyy')}">Date</span>
+                    </p>
+                </div>
+                
+                <div class="d-flex align-items-center gap-3">
+                    <div class="badge bg-warning text-dark fs-6 px-3 py-2 shadow-sm rounded-3">
+                        <i class="fa-solid fa-star me-1"></i> <span th:text="${avgRating}">4.5</span> / 5.0
+                    </div>
+
+                    <!-- Save / Bookmark Button -->
+                    <div sec:authorize="isAuthenticated()">
+                        <form th:if="${!isSaved}" th:action="@{'/collections/add/' + ${recipe.id}}" method="post">
+                            <button type="submit" class="btn btn-light shadow-sm"><i class="fa-regular fa-bookmark me-1 text-danger"></i> Save Recipe</button>
+                        </form>
+                        <form th:if="${isSaved}" th:action="@{'/collections/remove/' + ${recipe.id}}" method="post">
+                            <button type="submit" class="btn btn-warning shadow-sm"><i class="fa-solid fa-bookmark me-1"></i> Saved</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <!-- Left Column: Description, Ingredients & Step-by-Step Instructions -->
+            <div class="col-lg-8">
+                <!-- Description Card -->
+                <div class="card section-card p-4 mb-4">
+                    <h5 class="fw-bold text-dark border-bottom pb-2 mb-3"><i class="fa-solid fa-align-left text-danger me-2"></i>Description</h5>
+                    <p class="text-secondary mb-0 fs-6" th:text="${recipe.description != null and recipe.description.startsWith('[Category:') ? recipe.description.substring(recipe.description.indexOf(']') + 2) : recipe.description}">Recipe description...</p>
+                </div>
+
+                <!-- Structured Ingredients Card -->
+                <div class="card section-card p-4 mb-4">
+                    <h5 class="fw-bold text-dark border-bottom pb-2 mb-3"><i class="fa-solid fa-basket-shopping text-danger me-2"></i>Ingredients</h5>
+                    <ul class="ingredient-list">
+                        <li class="ingredient-item" th:each="item : ${#strings.arraySplit(recipe.ingredients, ',')}">
+                            <i class="fa-solid fa-circle-check"></i>
+                            <span class="fw-medium text-dark" th:text="${#strings.trim(item)}">Ingredient Item</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Step-by-Step Instructions Card -->
+                <div class="card section-card p-4 mb-4">
+                    <h5 class="fw-bold text-dark border-bottom pb-2 mb-3"><i class="fa-solid fa-list-check text-danger me-2"></i>Preparation Instructions</h5>
+                    <div class="step-card" th:each="step, iterStat : ${#strings.arraySplit(recipe.instructions, '\n')}">
+                        <div class="step-number" th:text="${iterStat.count}">1</div>
+                        <div class="step-content pt-1">
+                            <p class="mb-0 text-dark fw-medium" th:text="${#strings.trim(step)}">Instruction step content...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Column: Ratings & User Reviews -->
+            <div class="col-lg-4">
+
+                <!-- Submit Review & Rating Form -->
+                <div class="card section-card p-4 mb-4" sec:authorize="isAuthenticated()">
+                    <h5 class="fw-bold mb-3"><i class="fa-solid fa-star text-warning me-2"></i>Rate & Review</h5>
+                    
+                    <form th:action="@{/reviews/add}" method="post">
+                        <input type="hidden" name="recipeId" th:value="${recipe.id}">
+                        
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Your Rating</label>
+                            <select name="rating" class="form-select" required>
+                                <option value="5" selected>⭐⭐⭐⭐⭐ 5 - Excellent</option>
+                                <option value="4">⭐⭐⭐⭐ 4 - Good</option>
+                                <option value="3">⭐⭐⭐ 3 - Average</option>
+                                <option value="2">⭐⭐ 2 - Poor</option>
+                                <option value="1">⭐ 1 - Terrible</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Your Comment</label>
+                            <textarea name="comment" class="form-control" rows="3" placeholder="Share your experience making this dish..." required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-accent w-100"><i class="fa-solid fa-paper-plane me-1"></i> Submit Review</button>
+                    </form>
+                </div>
+
+                <!-- Prompt for Anonymous Users -->
+                <div class="card section-card p-4 mb-4 text-center" sec:authorize="isAnonymous()">
+                    <i class="fa-solid fa-lock text-muted fa-2x mb-2"></i>
+                    <h6 class="fw-bold mb-1">Want to review this recipe?</h6>
+                    <p class="small text-muted mb-3">Log in to leave a rating and save to your collection.</p>
+                    <a href="/login" class="btn btn-accent btn-sm"><i class="fa-solid fa-right-to-bracket me-1"></i> Log In Now</a>
+                </div>
+
+                <!-- Community Reviews List -->
+                <div class="card section-card p-4">
+                    <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+                        <h5 class="fw-bold mb-0"><i class="fa-solid fa-comments text-primary me-2"></i>Reviews</h5>
+                        <span class="badge bg-secondary rounded-pill" th:text="${reviews.size()}">0</span>
+                    </div>
+
+                    <div th:if="${reviews.empty}" class="text-center py-4 text-muted small">
+                        <i class="fa-regular fa-comment-dots fa-2x mb-2 text-secondary"></i>
+                        <p class="mb-0">No reviews yet. Be the first to share your feedback!</p>
+                    </div>
+
+                    <div class="list-group list-group-flush" th:if="${!reviews.empty}">
+                        <div class="list-group-item px-0 py-3" th:each="rev : ${reviews}">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <strong class="small text-dark"><i class="fa-solid fa-circle-user me-1 text-danger"></i> <span th:text="${rev.user.name}">User</span></strong>
+                                <small class="text-muted" th:text="${#temporals.format(rev.createdAt, 'dd MMM yyyy')}">Date</small>
+                            </div>
+                            <p class="mb-0 small text-secondary" th:text="${rev.comment}">Comment content</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Unified Footer Fragment -->
+    <div th:replace="~{fragments/common :: footer}"></div>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/bootstrap.bundle.min.js"></script>
+</body>
+</html>

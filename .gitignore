@@ -1,0 +1,52 @@
+# Compiled Java class files
+*.class
+
+# Log files
+*.log
+
+# Environment & Temp Files
+.env
+.env.local
+*.tmp
+*.temp
+cookies.txt
+scratch/
+
+# OS Generated Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Package Files
+*.jar
+*.war
+*.ear
+
+# Maven Build Target
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE Configuration Metadata
+.idea/
+*.iml
+*.iws
+*.ipr
+.classpath
+.project
+.settings/
+.vscode/
+
+# Local Uploads (Track seed dish images, ignore runtime temp files)
+uploads/*
+!uploads/recipes/
+!uploads/recipes/*.jpg
+!uploads/recipes/*.png
+!uploads/recipes/*.webp

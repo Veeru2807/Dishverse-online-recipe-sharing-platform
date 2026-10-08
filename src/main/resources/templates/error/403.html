@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>403 — Access Denied</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        body { font-family: sans-serif; background: #121824; color: white; min-height: 100vh; display: flex; align-items: center; justify-content: center; text-center: center; }
+        .btn-accent { background: linear-gradient(135deg, #ff5e3a 0%, #ff2a6d 100%); color: #fff; border: none; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="text-center p-4">
+        <i class="fa-solid fa-lock fa-4x text-warning mb-3"></i>
+        <h1 class="fw-bold display-4">403</h1>
+        <h3 class="mb-3">Access Denied</h3>
+        <p class="text-secondary max-w-500 mb-4" th:text="${errorMessage != null ? errorMessage : 'You do not have permission to access this page.'}">Access restricted.</p>
+        <a href="/" class="btn btn-accent px-4 py-2">Return to Home</a>
+    </div>
+</body>
+</html>

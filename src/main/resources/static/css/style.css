@@ -1,0 +1,451 @@
+/* ==========================================================================
+   DishVerse - Master Design System & Stylesheet
+   Theme: Warm Culinary Palette (Orange/Pink Accent, Dark Contrast, Soft Elevation)
+   ========================================================================== */
+
+:root {
+    --primary-color: #ff5e3a;
+    --secondary-color: #ff2a6d;
+    --dark-bg: #121824;
+    --dark-card: #1a2332;
+    --light-bg: #f8f9fa;
+    --card-bg: #ffffff;
+    --text-dark: #1e293b;
+    --text-muted: #64748b;
+    --border-color: #e2e8f0;
+
+    --accent-grad: linear-gradient(135deg, #ff5e3a 0%, #ff2a6d 100%);
+    --accent-grad-hover: linear-gradient(135deg, #e04826 0%, #e01b5c 100%);
+    --dark-grad: linear-gradient(135deg, #121824 0%, #1a2332 100%);
+
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+    --radius-pill: 50px;
+
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 4px 15px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.10);
+    --shadow-hover: 0 14px 28px rgba(0, 0, 0, 0.12);
+}
+
+/* --- Base Body & Typography --- */
+body {
+    font-family: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--light-bg);
+    color: var(--text-dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    color: var(--text-dark);
+}
+
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--secondary-color);
+}
+
+/* --- Navigation Bar --- */
+.navbar-custom {
+    background-color: var(--dark-bg) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.45rem;
+    color: #ffffff !important;
+    background: var(--accent-grad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-flex;
+    align-items: center;
+}
+
+.navbar-custom .nav-link {
+    color: rgba(255, 255, 255, 0.82) !important;
+    font-weight: 500;
+    padding: 0.5rem 0.85rem;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+}
+
+.navbar-custom .nav-link:hover,
+.navbar-custom .nav-link.active {
+    color: #ffffff !important;
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.dropdown-menu {
+    border: none;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-lg);
+    padding: 0.5rem;
+}
+
+.dropdown-item {
+    border-radius: var(--radius-sm);
+    font-weight: 500;
+    padding: 0.45rem 1rem;
+}
+
+.dropdown-item:hover {
+    background-color: #f1f5f9;
+}
+
+/* --- Footer --- */
+.footer {
+    margin-top: auto;
+    background-color: var(--dark-bg);
+    color: #94a3b8;
+    padding: 2.25rem 0 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.footer a {
+    color: #cbd5e1;
+}
+
+.footer a:hover {
+    color: #ffffff;
+}
+
+/* --- Buttons --- */
+.btn-accent {
+    background: var(--accent-grad);
+    color: #ffffff !important;
+    border: none;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    padding: 0.5rem 1.25rem;
+    transition: all 0.25s ease;
+}
+
+.btn-accent:hover {
+    opacity: 0.92;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(255, 94, 58, 0.35);
+}
+
+.btn-outline-accent {
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    background: transparent;
+    font-weight: 600;
+    border-radius: var(--radius-sm);
+    transition: all 0.2s ease;
+}
+
+.btn-outline-accent:hover {
+    background: var(--accent-grad);
+    color: #ffffff !important;
+    border-color: transparent;
+}
+
+/* --- Cards & Containers --- */
+.card-custom,
+.section-card,
+.form-card {
+    background: var(--card-bg);
+    border: none;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+}
+
+.stat-card {
+    border: none;
+    border-radius: var(--radius-lg);
+    background: #ffffff;
+    box-shadow: var(--shadow-md);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-lg);
+}
+
+.stat-icon-box {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 440px;
+    background: #ffffff;
+    border-radius: var(--radius-lg);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+}
+
+/* --- Recipe Cards --- */
+.recipe-card {
+    border: none;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow: var(--shadow-md);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.recipe-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
+}
+
+.recipe-img-container {
+    height: 200px;
+    background-color: #edf2f7;
+    overflow: hidden;
+    position: relative;
+}
+
+.recipe-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.35s ease;
+}
+
+.recipe-card:hover .recipe-img {
+    transform: scale(1.04);
+}
+
+/* --- Category Badges & Pills --- */
+.badge-category {
+    background-color: rgba(255, 94, 58, 0.1);
+    color: var(--primary-color);
+    font-weight: 600;
+    border-radius: var(--radius-pill);
+    padding: 0.35em 0.85em;
+    font-size: 0.8rem;
+    display: inline-block;
+}
+
+.badge-status-PENDING,
+.badge-status-pending {
+    background-color: #fef3c7;
+    color: #92400e;
+    font-weight: 600;
+}
+
+.badge-status-APPROVED,
+.badge-status-approved {
+    background-color: #d1fae5;
+    color: #065f46;
+    font-weight: 600;
+}
+
+.badge-status-REJECTED,
+.badge-status-rejected {
+    background-color: #fee2e2;
+    color: #991b1b;
+    font-weight: 600;
+}
+
+/* --- Category Quick Filter Pills --- */
+.filter-pill {
+    border: 1px solid #cbd5e1;
+    background-color: #ffffff;
+    color: #475569;
+    font-weight: 500;
+    border-radius: var(--radius-pill);
+    padding: 0.4rem 1.1rem;
+    display: inline-block;
+    transition: all 0.2s ease;
+    font-size: 0.9rem;
+}
+
+.filter-pill:hover,
+.filter-pill.active {
+    background: var(--accent-grad);
+    color: #ffffff;
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(255, 94, 58, 0.25);
+}
+
+/* --- Hero Banner & Overlay --- */
+.hero-section {
+    background: var(--dark-grad);
+    color: #ffffff;
+    padding: 70px 0 65px;
+    border-bottom: 4px solid var(--primary-color);
+    position: relative;
+}
+
+.accent-text {
+    background: var(--accent-grad);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-banner {
+    height: 350px;
+    background-color: var(--dark-bg);
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+}
+
+.hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.65;
+}
+
+.hero-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2.25rem;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.88), transparent);
+    color: #ffffff;
+}
+
+/* --- Structured Ingredients & Instructions --- */
+.ingredient-list {
+    list-style: none;
+    padding-left: 0;
+    margin-bottom: 0;
+}
+
+.ingredient-item {
+    padding: 0.65rem 0.85rem;
+    border-bottom: 1px border-subtle #f1f5f9;
+    display: flex;
+    align-items: center;
+    border-radius: var(--radius-sm);
+}
+
+.ingredient-item:nth-child(even) {
+    background-color: #f8fafc;
+}
+
+.ingredient-item i {
+    color: var(--primary-color);
+    margin-right: 0.65rem;
+}
+
+.step-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-md);
+    padding: 1.15rem;
+    margin-bottom: 1rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+}
+
+.step-number {
+    background: var(--accent-grad);
+    color: #ffffff;
+    font-weight: 700;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.9rem;
+}
+
+/* --- Form Controls & Upload Dropzone --- */
+.form-control,
+.form-select {
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-color);
+    padding: 0.6rem 0.9rem;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.25rem rgba(255, 94, 58, 0.18);
+}
+
+.upload-dropzone {
+    border: 2px dashed #cbd5e1;
+    border-radius: var(--radius-md);
+    padding: 1.75rem;
+    text-align: center;
+    background-color: #f8fafc;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+    cursor: pointer;
+}
+
+.upload-dropzone:hover {
+    border-color: var(--primary-color);
+    background-color: #fff5f3;
+}
+
+/* --- Data Tables --- */
+.table-wrapper {
+    background: #ffffff;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+}
+
+.table-custom {
+    margin-bottom: 0;
+}
+
+.table-custom th {
+    background-color: #f8fafc;
+    font-weight: 600;
+    color: #475569;
+    border-bottom: 2px solid var(--border-color);
+    padding: 0.85rem 1rem;
+}
+
+.table-custom td {
+    padding: 0.85rem 1rem;
+    vertical-align: middle;
+}
+
+.table-custom tbody tr:hover {
+    background-color: #f8fafc;
+}
+
+/* --- Empty States --- */
+.empty-state {
+    padding: 3.5rem 1.5rem;
+    text-align: center;
+    background: #ffffff;
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.empty-state-icon {
+    font-size: 3rem;
+    color: #cbd5e1;
+    margin-bottom: 1rem;
+}
+
+/* --- Utility Helpers --- */
+.max-w-400 { max-width: 400px; }
+.max-w-600 { max-width: 600px; }
+.max-w-700 { max-width: 700px; }
+.max-w-800 { max-width: 800px; }

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DishVerse — A World of Recipes</title>
+    <!-- Bootstrap 5 & FontAwesome -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom DishVerse CSS -->
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <!-- Unified Header Navbar -->
+    <div th:replace="~{fragments/common :: navbar}"></div>
+
+    <!-- Hero Section -->
+    <div class="hero-section text-center">
+        <div class="container">
+            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-semibold mb-3">
+                <i class="fa-solid fa-utensils me-1"></i> DishVerse — A World of Recipes
+            </span>
+            <h1 class="display-4 fw-bold mb-3">Discover & Share <span class="accent-text">Culinary Delights</span></h1>
+            <p class="lead text-light opacity-75 max-w-600 mx-auto mb-4 fs-5">
+                Explore handcrafted recipes from food enthusiasts around the world, save your favorite dishes, and share your own kitchen masterworks.
+            </p>
+
+            <!-- Prominent Recipe Search Bar -->
+            <form th:action="@{/recipes}" method="get" class="row g-2 justify-content-center max-w-700 mx-auto">
+                <div class="col-md-9">
+                    <div class="input-group input-group-lg shadow-sm">
+                        <span class="input-group-text bg-white border-0 text-muted"><i class="fa-solid fa-magnifying-glass text-danger"></i></span>
+                        <input type="text" name="query" class="form-control border-0 ps-1" placeholder="Search by dish name or ingredient (e.g. Paneer, Biryani, Dosa)...">
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-accent btn-lg w-100 shadow-sm"><i class="fa-solid fa-search me-1"></i> Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Category Quick Filter Pills Section -->
+    <div class="bg-white py-3 border-bottom shadow-sm">
+        <div class="container text-center">
+            <div class="d-flex flex-wrap justify-content-center align-items-center gap-2">
+                <span class="small fw-bold text-muted me-2 text-uppercase tracking-wide"><i class="fa-solid fa-filter me-1 text-danger"></i> Categories:</span>
+                <a th:href="@{/recipes}" class="filter-pill active">All Recipes</a>
+                <a th:href="@{/recipes(query='Chicken')}" class="filter-pill">🍗 Chicken</a>
+                <a th:href="@{/recipes(query='Paneer')}" class="filter-pill">🧀 Paneer</a>
+                <a th:href="@{/recipes(query='Vegetarian')}" class="filter-pill">🥗 Vegetarian</a>
+                <a th:href="@{/recipes(query='South Indian')}" class="filter-pill">🥙 South Indian</a>
+                <a th:href="@{/recipes(query='Snacks')}" class="filter-pill">🥪 Snacks</a>
+                <a th:href="@{/recipes(query='Chinese')}" class="filter-pill">🥢 Chinese</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Approved Recipes -->
+    <div class="container my-5 py-2">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h3 class="fw-bold mb-1"><i class="fa-solid fa-fire text-danger me-2"></i>Approved Community Recipes</h3>
+                <p class="text-muted small mb-0">Explore fresh, tested recipes shared by our culinary community</p>
+            </div>
+            <a href="/recipes" class="btn btn-outline-accent btn-sm px-3">View All Catalog <i class="fa-solid fa-arrow-right ms-1"></i></a>
+        </div>
+
+        <!-- Empty State -->
+        <div th:if="${recipes.empty}" class="empty-state">
+            <i class="fa-solid fa-cookie-bite empty-state-icon text-warning"></i>
+            <h4 class="fw-bold mb-2">No Approved Recipes Yet</h4>
+            <p class="text-muted mb-3">Be the first chef to share a masterwork with our community!</p>
+            <a href="/recipes/create" class="btn btn-accent"><i class="fa-solid fa-plus me-1"></i> Share a Recipe</a>
+        </div>
+
+        <!-- Recipe Cards Grid -->
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <div class="col" th:each="recipe : ${recipes}">
+                <div class="card recipe-card h-100">
+                    <div class="recipe-img-container">
+                        <img th:if="${recipe.imageUrl != null and (recipe.imageUrl.startsWith('http://') or recipe.imageUrl.startsWith('https://'))}" th:src="${recipe.imageUrl}" class="recipe-img" alt="Recipe Image">
+                        <img th:if="${recipe.imageUrl != null and !(recipe.imageUrl.startsWith('http://') or recipe.imageUrl.startsWith('https://'))}" th:src="@{'/uploads/recipes/' + ${recipe.imageUrl}}" class="recipe-img" alt="Recipe Image">
+                        <img th:if="${recipe.imageUrl == null or recipe.imageUrl.isEmpty()}" src="https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&w=600&q=80" class="recipe-img" alt="Default Food">
+                    </div>
+                    <div class="card-body d-flex flex-column p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="badge-category" th:text="${recipe.description != null and recipe.description.startsWith('[Category:') ? recipe.description.substring(11, recipe.description.indexOf(']')) : 'Special'}">Category</span>
+                            <span class="small text-warning fw-bold"><i class="fa-solid fa-star me-1"></i>4.5</span>
+                        </div>
+                        <h5 class="card-title fw-bold mb-2 text-dark" th:text="${recipe.title}">Recipe Title</h5>
+                        <p class="card-text text-muted small mb-3" th:text="${#strings.abbreviate(recipe.description != null and recipe.description.startsWith('[Category:') ? recipe.description.substring(recipe.description.indexOf(']') + 2) : recipe.description, 95)}">Short Description</p>
+                        <div class="mt-auto d-flex justify-content-between align-items-center pt-3 border-top">
+                            <span class="small text-secondary"><i class="fa-solid fa-circle-user me-1 text-danger"></i> <span th:text="${recipe.user.name}">Author</span></span>
+                            <a th:href="@{'/recipes/details/' + ${recipe.id}}" class="btn btn-sm btn-accent px-3">View Recipe <i class="fa-solid fa-chevron-right ms-1 small"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Unified Footer Fragment -->
+    <div th:replace="~{fragments/common :: footer}"></div>
+
+    <!-- Bootstrap 5 Bundle JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/bootstrap.bundle.min.js"></script>
+</body>
+</html>
