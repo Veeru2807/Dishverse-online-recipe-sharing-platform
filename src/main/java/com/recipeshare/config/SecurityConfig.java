@@ -55,7 +55,8 @@ public class SecurityConfig {
                     "/css/**",
                     "/js/**",
                     "/images/**",
-                    "/uploads/**"
+                    "/uploads/**",
+                    "/api/recipes/export"
                 ).permitAll()
                 .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")
                 .requestMatchers(
