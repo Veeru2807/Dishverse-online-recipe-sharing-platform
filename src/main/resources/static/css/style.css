@@ -95,6 +95,19 @@ a:hover {
     padding: 0.5rem;
 }
 
+/* Ensure navbar dropdown menu displays seamlessly on hover and click */
+.navbar-custom .dropdown:hover .dropdown-menu,
+.navbar-custom .dropdown-menu.show {
+    display: block !important;
+    margin-top: 0.25rem !important;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 .dropdown-item {
     border-radius: var(--radius-sm);
     font-weight: 500;

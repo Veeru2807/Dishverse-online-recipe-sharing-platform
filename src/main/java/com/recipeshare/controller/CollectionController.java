@@ -30,6 +30,7 @@ public class CollectionController {
     public String viewUserCollection(Model model) {
         User currentUser = SecurityUtils.getCurrentUser();
         List<RecipeCollection> collection = collectionService.getUserCollection(currentUser.getId());
+        model.addAttribute("collections", collection);
         model.addAttribute("collection", collection);
         return "collection/list";
     }

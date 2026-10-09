@@ -19,4 +19,6 @@ public interface ReviewService {
     Integer getUserRatingForRecipe(Long recipeId, Long userId);
 
     void deleteReview(Long reviewId, User user);
+
+    List<Review> getUserReviews(Long userId);
 }

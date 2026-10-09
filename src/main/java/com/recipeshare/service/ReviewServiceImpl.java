@@ -97,4 +97,10 @@ public class ReviewServiceImpl implements ReviewService {
 
         reviewRepository.delete(review);
     }
+
+    @Override
+    public List<Review> getUserReviews(Long userId) {
+        if (userId == null) return List.of();
+        return reviewRepository.findByUserIdOrderByCreatedAtDesc(userId);
+    }
 }

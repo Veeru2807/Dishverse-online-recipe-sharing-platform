@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Profile — DishVerse</title>
+    <title>My Profile & Activity — DishVerse</title>
     <!-- Bootstrap 5 & FontAwesome -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -16,7 +16,7 @@
     <!-- Unified Header Navbar -->
     <div th:replace="~{fragments/common :: navbar}"></div>
 
-    <div class="container my-5 max-w-600">
+    <div class="container my-4">
         <!-- Global Alert Notifications -->
         <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show">
             <i class="fa-solid fa-circle-check me-2"></i><span th:text="${successMessage}">Success</span>
@@ -27,50 +27,260 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
 
-        <div class="card form-card p-4 p-md-5">
-            <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
-                <div class="stat-icon-box bg-primary-subtle text-primary">
-                    <i class="fa-solid fa-user-gear"></i>
+        <div class="mb-3">
+            <a href="javascript:history.back()" class="btn btn-outline-secondary btn-sm rounded-pill px-3 shadow-sm"><i class="fa-solid fa-arrow-left me-1"></i> Back</a>
+        </div>
+
+        <!-- Profile Hero Header Card -->
+        <div class="card card-custom p-4 p-md-5 mb-4 shadow-sm border-0 position-relative overflow-hidden" style="background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%); text-color: #ffffff;">
+            <div class="d-flex flex-column flex-md-row align-items-center gap-4 text-white position-relative z-1">
+                <div class="rounded-circle bg-danger text-white d-flex align-items-center justify-content-center shadow-lg" style="width: 90px; height: 90px; font-size: 2.5rem; font-weight: 700;">
+                    <span th:text="${#strings.substring(currentUser.name, 0, 1)}">U</span>
                 </div>
-                <div>
-                    <h3 class="fw-bold mb-0">Account Profile</h3>
-                    <p class="text-muted small mb-0">Manage your profile details and security settings</p>
+                <div class="text-center text-md-start flex-grow-1">
+                    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-md-start gap-2 mb-2">
+                        <h2 class="fw-bold mb-0 text-white" th:text="${currentUser.name}">User Name</h2>
+                        <span class="badge bg-warning text-dark px-3 py-1 rounded-pill fw-semibold small" th:text="${currentUser.role.name() == 'ROLE_ADMIN' ? '👑 Admin' : '👨‍🍳 Member'}">Role</span>
+                    </div>
+                    <p class="text-light opacity-75 mb-2 small">
+                        <i class="fa-solid fa-envelope me-1 text-warning"></i> <span th:text="${currentUser.email}">user@email.com</span>
+                        <span class="mx-2">•</span>
+                        <i class="fa-solid fa-calendar-check me-1 text-warning"></i> Joined <span th:text="${#temporals.format(currentUser.createdAt, 'MMM yyyy')}">Jan 2026</span>
+                    </p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="/recipes/create" class="btn btn-accent px-4 py-2 shadow-sm"><i class="fa-solid fa-plus-circle me-1"></i> Share Recipe</a>
                 </div>
             </div>
+        </div>
 
-            <form th:action="@{/profile}" th:object="${user}" method="post">
-                <div class="mb-3">
-                    <label class="form-label small fw-semibold">Full Name</label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-light text-muted"><i class="fa-solid fa-user"></i></span>
-                        <input type="text" th:field="*{name}" class="form-control" placeholder="Full Name" required>
+        <!-- Stat Counter Cards Row -->
+        <div class="row g-3 mb-4">
+            <div class="col-6 col-md-3">
+                <div class="card stat-card p-3 text-center border-0 shadow-sm h-100">
+                    <div class="stat-icon-box bg-danger-subtle text-danger mx-auto mb-2">
+                        <i class="fa-solid fa-utensils"></i>
                     </div>
+                    <h3 class="fw-bold mb-0 text-dark" th:text="${myRecipesCount}">0</h3>
+                    <span class="small text-muted fw-medium">My Shared Recipes</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card stat-card p-3 text-center border-0 shadow-sm h-100">
+                    <div class="stat-icon-box bg-warning-subtle text-warning mx-auto mb-2">
+                        <i class="fa-solid fa-bookmark"></i>
+                    </div>
+                    <h3 class="fw-bold mb-0 text-dark" th:text="${savedCount}">0</h3>
+                    <span class="small text-muted fw-medium">Saved Bookmarks</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card stat-card p-3 text-center border-0 shadow-sm h-100">
+                    <div class="stat-icon-box bg-primary-subtle text-primary mx-auto mb-2">
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                    <h3 class="fw-bold mb-0 text-dark" th:text="${reviewsCount}">0</h3>
+                    <span class="small text-muted fw-medium">Reviews & Ratings</span>
+                </div>
+            </div>
+            <div class="col-6 col-md-3">
+                <div class="card stat-card p-3 text-center border-0 shadow-sm h-100">
+                    <div class="stat-icon-box bg-success-subtle text-success mx-auto mb-2">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <h5 class="fw-bold mb-0 text-dark pt-1" th:text="${currentUser.role.name() == 'ROLE_ADMIN' ? 'Administrator' : 'Active Member'}">Member</h5>
+                    <span class="small text-muted fw-medium">Account Status</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Profile Navigation Tabs -->
+        <ul class="nav nav-pills mb-4 gap-2 bg-white p-2 rounded-3 border shadow-sm" id="profileTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link px-3 py-2 fw-semibold" th:classappend="${activeTab == 'overview' or activeTab == 'recipes' ? 'active' : ''}" id="my-recipes-tab" data-bs-toggle="tab" data-bs-target="#my-recipes-pane" type="button" role="tab">
+                    <i class="fa-solid fa-book-open me-1 text-danger"></i> My Recipes (<span th:text="${myRecipesCount}">0</span>)
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link px-3 py-2 fw-semibold" th:classappend="${activeTab == 'bookmarks' ? 'active' : ''}" id="bookmarks-tab" data-bs-toggle="tab" data-bs-target="#bookmarks-pane" type="button" role="tab">
+                    <i class="fa-solid fa-bookmark me-1 text-warning"></i> Saved Bookmarks (<span th:text="${savedCount}">0</span>)
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link px-3 py-2 fw-semibold" th:classappend="${activeTab == 'reviews' ? 'active' : ''}" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews-pane" type="button" role="tab">
+                    <i class="fa-solid fa-comments me-1 text-primary"></i> My Reviews & Ratings (<span th:text="${reviewsCount}">0</span>)
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link px-3 py-2 fw-semibold" th:classappend="${activeTab == 'settings' ? 'active' : ''}" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings-pane" type="button" role="tab">
+                    <i class="fa-solid fa-user-gear me-1 text-secondary"></i> Account Settings
+                </button>
+            </li>
+        </ul>
+
+        <!-- Tab Content Panes -->
+        <div class="tab-content" id="profileTabsContent">
+
+            <!-- Tab 1: My Created Recipes -->
+            <div class="tab-pane fade" th:classappend="${activeTab == 'overview' or activeTab == 'recipes' ? 'show active' : ''}" id="my-recipes-pane" role="tabpanel">
+                <div th:if="${userRecipes.empty}" class="empty-state bg-white rounded-3 p-5 text-center border shadow-sm">
+                    <i class="fa-solid fa-utensils empty-state-icon text-warning mb-3 fa-3x"></i>
+                    <h4 class="fw-bold mb-2">You haven't shared any recipes yet</h4>
+                    <p class="text-muted mb-3">Share your favorite culinary creations with the DishVerse community!</p>
+                    <a href="/recipes/create" class="btn btn-accent btn-sm px-4"><i class="fa-solid fa-plus me-1"></i> Submit New Recipe</a>
                 </div>
 
-                <div class="mb-4">
-                    <label class="form-label small fw-semibold">Email Address (Read-only)</label>
-                    <div class="input-group">
-                        <span class="input-group-text bg-light text-muted"><i class="fa-solid fa-envelope"></i></span>
-                        <input type="email" th:field="*{email}" class="form-control bg-light" readonly>
-                    </div>
-                </div>
-
-                <div class="border-top pt-3 mb-4">
-                    <h6 class="fw-bold mb-3 text-secondary"><i class="fa-solid fa-key me-2"></i>Change Password (Optional)</h6>
-                    <div class="mb-3">
-                        <label class="form-label small fw-semibold">New Password</label>
-                        <div class="input-group">
-                            <span class="input-group-text bg-light text-muted"><i class="fa-solid fa-lock"></i></span>
-                            <input type="password" th:field="*{newPassword}" class="form-control" placeholder="Leave empty to keep current password">
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" th:if="${!userRecipes.empty}">
+                    <div class="col" th:each="rec : ${userRecipes}">
+                        <div class="card recipe-card h-100 shadow-sm">
+                            <div class="recipe-img-container">
+                                <img th:if="${rec.imageUrl != null and (rec.imageUrl.startsWith('http://') or rec.imageUrl.startsWith('https://'))}" th:src="${rec.imageUrl}" class="recipe-img" alt="Recipe Image">
+                                <img th:if="${rec.imageUrl != null and !(rec.imageUrl.startsWith('http://') or rec.imageUrl.startsWith('https://'))}" th:src="@{'/uploads/recipes/' + ${rec.imageUrl}}" class="recipe-img" alt="Recipe Image">
+                                <img th:if="${rec.imageUrl == null or rec.imageUrl.isEmpty()}" src="https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&w=600&q=80" class="recipe-img" alt="Default Food">
+                            </div>
+                            <div class="card-body d-flex flex-column p-4">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <span class="badge" th:classappend="${rec.status.name() == 'APPROVED' ? 'bg-success' : (rec.status.name() == 'PENDING' ? 'bg-warning text-dark' : 'bg-danger')}" th:text="${rec.status.name()}">Status</span>
+                                    <small class="text-muted" th:text="${#temporals.format(rec.createdAt, 'dd MMM yyyy')}">Date</small>
+                                </div>
+                                <h5 class="card-title fw-bold mb-2 text-dark" th:text="${rec.title}">Recipe Title</h5>
+                                <p class="card-text text-muted small mb-3" th:text="${#strings.abbreviate(rec.description != null and rec.description.startsWith('[Category:') ? rec.description.substring(rec.description.indexOf(']') + 2) : rec.description, 85)}">Description</p>
+                                
+                                <div class="mt-auto d-flex justify-content-between align-items-center pt-3 border-top">
+                                    <a th:href="@{'/recipes/details/' + ${rec.id}}" class="btn btn-sm btn-outline-primary"><i class="fa-solid fa-eye me-1"></i> View</a>
+                                    <div class="d-flex gap-1">
+                                        <a th:href="@{'/recipes/edit/' + ${rec.id}}" class="btn btn-sm btn-outline-warning" title="Edit"><i class="fa-solid fa-pen"></i></a>
+                                        <form th:action="@{'/recipes/delete/' + ${rec.id}}" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this recipe?');">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete"><i class="fa-solid fa-trash"></i></button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="d-flex gap-2">
-                    <button type="submit" class="btn btn-accent btn-lg w-100 fs-6 shadow-sm"><i class="fa-solid fa-floppy-disk me-1"></i> Update Profile</button>
-                    <a href="/dashboard" class="btn btn-outline-secondary btn-lg px-4 fs-6">Cancel</a>
+            <!-- Tab 2: Saved Bookmarks -->
+            <div class="tab-pane fade" th:classappend="${activeTab == 'bookmarks' ? 'show active' : ''}" id="bookmarks-pane" role="tabpanel">
+                <div th:if="${savedCollections.empty}" class="empty-state bg-white rounded-3 p-5 text-center border shadow-sm">
+                    <i class="fa-regular fa-bookmark empty-state-icon text-warning mb-3 fa-3x"></i>
+                    <h4 class="fw-bold mb-2">Your Saved Collection is Empty</h4>
+                    <p class="text-muted mb-3">Bookmark recipes as you browse to save them to your personal cookbook!</p>
+                    <a href="/recipes" class="btn btn-accent btn-sm px-4"><i class="fa-solid fa-compass me-1"></i> Explore Catalog</a>
                 </div>
-            </form>
+
+                <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4" th:if="${!savedCollections.empty}">
+                    <div class="col" th:each="item : ${savedCollections}">
+                        <div class="card recipe-card h-100 shadow-sm">
+                            <div class="recipe-img-container">
+                                <img th:if="${item.recipe.imageUrl != null and (item.recipe.imageUrl.startsWith('http://') or item.recipe.imageUrl.startsWith('https://'))}" th:src="${item.recipe.imageUrl}" class="recipe-img" alt="Recipe Image">
+                                <img th:if="${item.recipe.imageUrl != null and !(item.recipe.imageUrl.startsWith('http://') or item.recipe.imageUrl.startsWith('https://'))}" th:src="@{'/uploads/recipes/' + ${item.recipe.imageUrl}}" class="recipe-img" alt="Recipe Image">
+                                <img th:if="${item.recipe.imageUrl == null or item.recipe.imageUrl.isEmpty()}" src="https://images.unsplash.com/photo-1495521821757-a1efb6729352?auto=format&fit=crop&w=600&q=80" class="recipe-img" alt="Default Food">
+                            </div>
+                            <div class="card-body d-flex flex-column p-4">
+                                <h5 class="card-title fw-bold mb-2 text-dark" th:text="${item.recipe.title}">Recipe Title</h5>
+                                <p class="card-text text-muted small mb-3" th:text="${#strings.abbreviate(item.recipe.description != null and item.recipe.description.startsWith('[Category:') ? item.recipe.description.substring(item.recipe.description.indexOf(']') + 2) : item.recipe.description, 85)}">Description</p>
+                                
+                                <div class="mt-auto d-flex justify-content-between align-items-center pt-3 border-top">
+                                    <a th:href="@{'/recipes/details/' + ${item.recipe.id}}" class="btn btn-sm btn-accent px-3">View Recipe</a>
+                                    <form th:action="@{'/collections/remove/' + ${item.recipe.id}}" method="post">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash-can me-1"></i> Remove</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: My Reviews & Ratings -->
+            <div class="tab-pane fade" th:classappend="${activeTab == 'reviews' ? 'show active' : ''}" id="reviews-pane" role="tabpanel">
+                <div th:if="${userReviews.empty}" class="empty-state bg-white rounded-3 p-5 text-center border shadow-sm">
+                    <i class="fa-regular fa-comment-dots empty-state-icon text-primary mb-3 fa-3x"></i>
+                    <h4 class="fw-bold mb-2">No Reviews Left Yet</h4>
+                    <p class="text-muted mb-3">Rate and review recipes you've prepared to help the community!</p>
+                    <a href="/recipes" class="btn btn-accent btn-sm px-4"><i class="fa-solid fa-compass me-1"></i> Discover Recipes</a>
+                </div>
+
+                <div class="card border-0 shadow-sm p-4 bg-white rounded-3" th:if="${!userReviews.empty}">
+                    <h5 class="fw-bold border-bottom pb-3 mb-3"><i class="fa-solid fa-star text-warning me-2"></i>My Feedback & Reviews</h5>
+                    <div class="list-group list-group-flush">
+                        <div class="list-group-item px-0 py-3" th:each="rev : ${userReviews}">
+                            <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-2 mb-2">
+                                <div>
+                                    <a th:href="@{'/recipes/details/' + ${rev.recipe.id}}" class="fw-bold text-dark text-decoration-none fs-6">
+                                        <i class="fa-solid fa-utensils text-danger me-2"></i><span th:text="${rev.recipe.title}">Recipe Title</span>
+                                    </a>
+                                    <small class="text-muted ms-md-2 d-block d-md-inline" th:text="${#temporals.format(rev.createdAt, 'dd MMM yyyy, HH:mm')}">Date</small>
+                                </div>
+                                <form th:action="@{'/reviews/delete/' + ${rev.id}}" method="post" onsubmit="return confirm('Delete this review?');">
+                                    <input type="hidden" name="recipeId" th:value="${rev.recipe.id}">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"><i class="fa-solid fa-trash-can me-1"></i> Delete</button>
+                                </form>
+                            </div>
+                            <p class="mb-0 text-secondary bg-light p-3 rounded-3 border small" th:text="${rev.comment}">Review comment content...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 4: Account Settings / Profile Edit -->
+            <div class="tab-pane fade" th:classappend="${activeTab == 'settings' ? 'show active' : ''}" id="settings-pane" role="tabpanel">
+                <div class="card form-card p-4 p-md-5 bg-white border-0 shadow-sm max-w-600 mx-auto">
+                    <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
+                        <div class="stat-icon-box bg-primary-subtle text-primary">
+                            <i class="fa-solid fa-user-gear"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-0">Account Details & Password</h4>
+                            <p class="text-muted small mb-0">Update your account name or set a new password.</p>
+                        </div>
+                    </div>
+
+                    <form th:action="@{/profile/update}" th:object="${profileDto}" method="post">
+                        <div class="mb-3">
+                            <label class="form-label small fw-semibold">Full Name</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i class="fa-solid fa-user"></i></span>
+                                <input type="text" th:field="*{name}" class="form-control" placeholder="Full Name" required>
+                            </div>
+                            <div class="text-danger small mt-1" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label small fw-semibold">Email Address (Read-only)</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-light text-muted"><i class="fa-solid fa-envelope"></i></span>
+                                <input type="email" th:field="*{email}" class="form-control bg-light" readonly>
+                            </div>
+                        </div>
+
+                        <div class="border-top pt-3 mb-4">
+                            <h6 class="fw-bold mb-3 text-secondary"><i class="fa-solid fa-key me-2"></i>Change Password (Optional)</h6>
+                            <div class="mb-3">
+                                <label class="form-label small fw-semibold">Current Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-muted"><i class="fa-solid fa-lock-open"></i></span>
+                                    <input type="password" th:field="*{currentPassword}" class="form-control" placeholder="Required only if changing password">
+                                </div>
+                                <div class="text-danger small mt-1" th:if="${#fields.hasErrors('currentPassword')}" th:errors="*{currentPassword}"></div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label small fw-semibold">New Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light text-muted"><i class="fa-solid fa-lock"></i></span>
+                                    <input type="password" th:field="*{newPassword}" class="form-control" placeholder="Leave blank to keep current password">
+                                </div>
+                                <div class="text-danger small mt-1" th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}"></div>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-accent btn-lg w-100 fs-6 shadow-sm"><i class="fa-solid fa-floppy-disk me-1"></i> Save Changes</button>
+                    </form>
+                </div>
+            </div>
+
         </div>
     </div>
 

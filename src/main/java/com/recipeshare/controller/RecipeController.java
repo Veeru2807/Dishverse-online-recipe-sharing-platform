@@ -68,7 +68,9 @@ public class RecipeController {
 
     @GetMapping("/create")
     public String showCreateRecipeForm(Model model) {
-        model.addAttribute("recipeDto", new RecipeDto());
+        RecipeDto recipeDto = new RecipeDto();
+        model.addAttribute("recipeDto", recipeDto);
+        model.addAttribute("recipe", recipeDto);
         return "recipe/create";
     }
 
@@ -78,6 +80,7 @@ public class RecipeController {
                                RedirectAttributes redirectAttributes,
                                Model model) {
         if (bindingResult.hasErrors()) {
+            model.addAttribute("recipe", recipeDto);
             return "recipe/create";
         }
 
@@ -111,6 +114,7 @@ public class RecipeController {
                 .build();
 
         model.addAttribute("recipeDto", recipeDto);
+        model.addAttribute("recipe", recipeDto);
         return "recipe/edit";
     }
 
@@ -118,8 +122,11 @@ public class RecipeController {
     public String updateRecipe(@PathVariable("id") Long id,
                                @Valid @ModelAttribute("recipeDto") RecipeDto recipeDto,
                                BindingResult bindingResult,
-                               RedirectAttributes redirectAttributes) {
+                               RedirectAttributes redirectAttributes,
+                               Model model) {
         if (bindingResult.hasErrors()) {
+            recipeDto.setId(id);
+            model.addAttribute("recipe", recipeDto);
             return "recipe/edit";
         }
 

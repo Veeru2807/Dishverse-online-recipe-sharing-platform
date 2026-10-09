@@ -28,6 +28,10 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
         </div>
 
+        <div class="mb-3">
+            <a href="javascript:history.back()" class="btn btn-outline-secondary btn-sm rounded-pill px-3 shadow-sm"><i class="fa-solid fa-arrow-left me-1"></i> Back</a>
+        </div>
+
         <!-- Recipe Hero Banner -->
         <div class="hero-banner mb-4">
             <img th:if="${recipe.imageUrl != null and (recipe.imageUrl.startsWith('http://') or recipe.imageUrl.startsWith('https://'))}" th:src="${recipe.imageUrl}" class="hero-img" alt="Recipe Banner">

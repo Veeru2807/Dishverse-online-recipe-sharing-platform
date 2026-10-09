@@ -33,17 +33,20 @@
                         <a href="/register" class="btn btn-accent btn-sm px-3">Sign Up</a>
                     </div>
                     <div sec:authorize="isAuthenticated()" class="dropdown">
-                        <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fa-solid fa-user-circle me-1"></i> <span sec:authentication="name">User</span>
-                        </button>
-                        <ul class="dropdown-menu dropdown-menu-end shadow">
-                            <li><a class="dropdown-item" href="/dashboard"><i class="fa-solid fa-gauge me-2"></i> Dashboard</a></li>
-                            <li><a class="dropdown-item" href="/recipes/my-recipes"><i class="fa-solid fa-book-open me-2"></i> My Recipes</a></li>
-                            <li><a class="dropdown-item" href="/profile"><i class="fa-solid fa-user-gear me-2"></i> Edit Profile</a></li>
+                        <a href="/profile" class="btn btn-outline-light btn-sm dropdown-toggle d-flex align-items-center gap-2 px-3 py-1-5" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa-solid fa-circle-user fa-lg text-warning"></i>
+                            <span th:text="${#authentication.principal.fullName}">User</span>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+                            <li><a class="dropdown-item py-2 fw-semibold text-dark" href="/profile"><i class="fa-solid fa-user-circle me-2 text-primary"></i> My Profile & Activity</a></li>
+                            <li><a class="dropdown-item py-2" href="/recipes/my-recipes"><i class="fa-solid fa-book-open me-2 text-danger"></i> My Created Recipes</a></li>
+                            <li><a class="dropdown-item py-2" href="/collections"><i class="fa-solid fa-bookmark me-2 text-warning"></i> My Saved Bookmarks</a></li>
+                            <li><a class="dropdown-item py-2" href="/dashboard"><i class="fa-solid fa-gauge me-2 text-info"></i> User Dashboard</a></li>
+                            <li sec:authorize="hasAuthority('ROLE_ADMIN')"><a class="dropdown-item py-2 text-warning fw-bold" href="/admin/dashboard"><i class="fa-solid fa-shield-halved me-2"></i> Admin Panel</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
-                                <form th:action="@{/logout}" method="post">
-                                    <button class="dropdown-item text-danger" type="submit"><i class="fa-solid fa-right-from-bracket me-2"></i> Log Out</button>
+                                <form th:action="@{/logout}" method="post" class="m-0 p-0">
+                                    <button class="dropdown-item py-2 text-danger fw-semibold" type="submit"><i class="fa-solid fa-right-from-bracket me-2"></i> Log Out</button>
                                 </form>
                             </li>
                         </ul>

@@ -2,7 +2,9 @@ package com.recipeshare.repository;
 
 import com.recipeshare.entity.RecipeCollection;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,5 +18,8 @@ public interface RecipeCollectionRepository extends JpaRepository<RecipeCollecti
 
     Optional<RecipeCollection> findByUserIdAndRecipeId(Long userId, Long recipeId);
 
+    @Modifying
+    @Transactional
     void deleteByUserIdAndRecipeId(Long userId, Long recipeId);
 }
+

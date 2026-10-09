@@ -8,6 +8,7 @@ import com.recipeshare.enums.Role;
 import com.recipeshare.exception.ResourceNotFoundException;
 import com.recipeshare.exception.UnauthorizedAccessException;
 import com.recipeshare.repository.RecipeRepository;
+import com.recipeshare.repository.UserRepository;
 import com.recipeshare.util.FileUploadUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,18 +22,27 @@ import java.util.List;
 public class RecipeServiceImpl implements RecipeService {
 
     private final RecipeRepository recipeRepository;
+    private final UserRepository userRepository;
 
     @Value("${app.upload.dir:uploads/recipes/}")
     private String uploadDir;
 
     @Autowired
-    public RecipeServiceImpl(RecipeRepository recipeRepository) {
+    public RecipeServiceImpl(RecipeRepository recipeRepository, UserRepository userRepository) {
         this.recipeRepository = recipeRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
     @Transactional
     public Recipe createRecipe(RecipeDto recipeDto, User user) {
+        if (user == null || user.getId() == null) {
+            throw new UnauthorizedAccessException("You must be logged in to create a recipe");
+        }
+
+        User managedUser = userRepository.findById(user.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + user.getId()));
+
         String fileName = null;
         if (recipeDto.getImageFile() != null && !recipeDto.getImageFile().isEmpty()) {
             try {
@@ -49,11 +59,12 @@ public class RecipeServiceImpl implements RecipeService {
                 .instructions(recipeDto.getInstructions())
                 .imageUrl(fileName)
                 .status(RecipeStatus.PENDING)
-                .user(user)
+                .user(managedUser)
                 .build();
 
         return recipeRepository.save(recipe);
     }
+
 
     @Override
     @Transactional
