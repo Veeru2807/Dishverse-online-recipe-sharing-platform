@@ -16,27 +16,31 @@
     <!-- Unified Header Navbar -->
     <div th:replace="~{fragments/common :: navbar}"></div>
 
-    <!-- Hero Section -->
-    <div class="hero-section text-center">
-        <div class="container">
-            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-semibold mb-3">
+    <!-- Hero Section with Live Animated Food Background -->
+    <div class="hero-section text-center position-relative overflow-hidden">
+        <!-- Live Background Layers -->
+        <div class="hero-bg-animated"></div>
+        <div class="hero-bg-overlay"></div>
+
+        <div class="container position-relative z-2">
+            <span class="badge bg-warning text-dark px-3 py-2 rounded-pill fw-semibold mb-3 shadow">
                 <i class="fa-solid fa-utensils me-1"></i> DishVerse — A World of Recipes
             </span>
-            <h1 class="display-4 fw-bold mb-3">Discover & Share <span class="accent-text">Culinary Delights</span></h1>
-            <p class="lead text-light opacity-75 max-w-600 mx-auto mb-4 fs-5">
+            <h1 class="display-4 fw-bold mb-3 text-white">Discover & Share <span class="accent-text">Culinary Delights</span></h1>
+            <p class="lead text-light opacity-90 max-w-600 mx-auto mb-4 fs-5">
                 Explore handcrafted recipes from food enthusiasts around the world, save your favorite dishes, and share your own kitchen masterworks.
             </p>
 
             <!-- Prominent Recipe Search Bar -->
             <form th:action="@{/recipes}" method="get" class="row g-2 justify-content-center max-w-700 mx-auto">
                 <div class="col-md-9">
-                    <div class="input-group input-group-lg shadow-sm">
+                    <div class="input-group input-group-lg shadow-lg">
                         <span class="input-group-text bg-white border-0 text-muted"><i class="fa-solid fa-magnifying-glass text-danger"></i></span>
                         <input type="text" name="query" class="form-control border-0 ps-1" placeholder="Search by dish name or ingredient (e.g. Paneer, Biryani, Dosa)...">
                     </div>
                 </div>
                 <div class="col-md-3">
-                    <button type="submit" class="btn btn-accent btn-lg w-100 shadow-sm"><i class="fa-solid fa-search me-1"></i> Search</button>
+                    <button type="submit" class="btn btn-accent btn-lg w-100 shadow-lg"><i class="fa-solid fa-search me-1"></i> Search</button>
                 </div>
             </form>
         </div>
