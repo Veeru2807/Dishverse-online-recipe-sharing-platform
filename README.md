@@ -32,12 +32,12 @@
 
 ---
 
-## 1. Project Overview & Objectives
+## 1. Project Overview & Objectives.
 
-### Overview
+### Overview.
 DishVerse is designed to connect home chefs, culinary enthusiasts, and food lovers. Users can explore curated recipes, publish their own culinary creations, save recipes into personal bookmark collections, and rate or review community dishes. To maintain catalog quality, submitted recipes undergo administrative review via a dedicated **Admin Moderation Queue** before being published to the public interface.
 
-### Core Objectives
+### Core Objectives.
 * **Maintain Content Quality:** Implement a 3-stage recipe status lifecycle (`PENDING` → `APPROVED` / `REJECTED`) managed by platform administrators.
 * **Role-Based Access Control:** Secure user workflows and administrative management using Spring Security 6 authorization rules.
 * **Interactive Community Engagement:** Enable users to leave 1-to-5 star ratings and textual reviews with automatic average rating computation.
@@ -45,7 +45,7 @@ DishVerse is designed to connect home chefs, culinary enthusiasts, and food love
 
 ---
 
-## 2. Problem Statement
+## 2. Problem Statement.
 
 Many online recipe platforms suffer from:
 1. **Unmoderated Content Submissions:** Lack of review workflows leads to incomplete, spammy, or inaccurate recipes in public catalogs.
@@ -57,7 +57,7 @@ Many online recipe platforms suffer from:
 
 ---
 
-## 3. Implemented Features by Role
+## 3. Implemented Features by Role.
 
 ### 🌐 Public / Guest User Features
 * **Public Recipe Catalog:** Browse all approved recipes (`/recipes`) with category filter pills (e.g., *Chicken*, *Paneer*, *Vegetarian*, *South Indian*, *Snacks*, *Chinese*).
@@ -66,7 +66,7 @@ Many online recipe platforms suffer from:
 * **Direct JSON Export Endpoint:** Access public approved recipe data in JSON format via native Jakarta Servlet (`/api/recipes/export`).
 * **User Account Registration & Login:** Create a new account with validation or authenticate using email and password (`/register`, `/login`).
 
-### 👤 Registered User Features (`ROLE_USER`)
+### 👤 Registered User Features (`ROLE_USER`).
 * **Personal User Dashboard:** View account summary, submitted recipe count, saved collections, and latest submitted recipe statuses (`/dashboard`).
 * **Recipe Submission:** Submit recipes with title, category description tag, ingredients, step-by-step instructions, and image upload attachments (`/recipes/create`). Newly created recipes receive `PENDING` status.
 * **Recipe Status Tracking:** Monitor real-time moderation status (`PENDING`, `APPROVED`, `REJECTED`) from the personal workspace (`/recipes/my-recipes`).
@@ -75,7 +75,7 @@ Many online recipe platforms suffer from:
 * **Interactive Ratings & Reviews:** Rate recipes on a 1-5 star scale and publish textual reviews (`/ratings/submit`, `/reviews/add`).
 * **Profile Management:** Update personal account details and change passwords (`/profile`, `/profile/update`, `/profile/change-password`).
 
-### 🛡️ Administrator Features (`ROLE_ADMIN`)
+### 🛡️ Administrator Features (`ROLE_ADMIN`).
 * **Administrator Console:** Centralized dashboard displaying live platform statistics: Total Registered Users, Pending Recipe Approvals, Approved Recipes, and Total Reviews (`/admin/dashboard`).
 * **Recipe Moderation Queue:** Review pending recipe submissions with full details, then perform one-click approval (`/admin/recipes/approve/{id}`) or rejection (`/admin/recipes/reject/{id}`).
 * **User Management Console:** Inspect all registered accounts, promote users to `ROLE_ADMIN`, demote admins to `ROLE_USER`, or delete user accounts (`/admin/users`, `/admin/users/promote/{id}`, `/admin/users/demote/{id}`, `/admin/users/delete/{id}`).
@@ -83,7 +83,7 @@ Many online recipe platforms suffer from:
 
 ---
 
-## 4. Technology Stack & Prerequisites
+## 4. Technology Stack & Prerequisites.
 
 | Layer | Technology / Tool | Version / Details |
 | :--- | :--- | :--- |
@@ -99,18 +99,18 @@ Many online recipe platforms suffer from:
 | **Boilerplate Reduction** | Lombok | Project Lombok (`org.projectlombok:lombok`) |
 | **Build Tool** | Apache Maven | 3.8+ |
 
-### Prerequisites
+### Prerequisites.
 * **JDK 17** or higher installed and configured in `JAVA_HOME`.
 * **MySQL 8.x** running locally on port `3306`.
 * **Apache Maven 3.8+** (or use system `mvn` command).
 
 ---
 
-## 5. System Architecture & Layered Design
+## 5. System Architecture & Layered Design.
 
 DishVerse follows a clean multi-tier architecture adhering to standard Enterprise Java patterns. Requests flow through predefined layers to ensure strict separation of concerns, maintainability, and testability.
 
-### 🏢 Architectural Layers
+### 🏢 Architectural Layers.
 1. **Client / View Layer (Thymeleaf & Static Assets):** Renders dynamic HTML templates embedded with Thymeleaf directives (`th:text`, `th:each`, `sec:authorize`). Styled with Bootstrap 5.3.2 and custom CSS variables defined in `/css/style.css`.
 2. **Security & Filter Chain Layer (Spring Security 6):** Intercepts incoming HTTP requests, performs BCrypt user authentication, evaluates role permissions (`ROLE_USER` / `ROLE_ADMIN`), and handles session invalidation.
 3. **Servlet & Controller Layer (Spring MVC & Jakarta Servlet):**
