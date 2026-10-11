@@ -597,13 +597,15 @@ Execute these Maven commands in your project root:
 * **Single-Instance Deployment:** Session state relies on container memory, requiring sticky sessions for horizontal scaling across multiple application instances.
 * **Manual Content Moderation:** Recipe approvals rely entirely on manual administrative inspection without automated AI content filtering.
 
-### Future Scope
+### Future Scope: 
 * **Cloud Object Storage:** Integrate Amazon S3 or Cloudinary for cloud photo attachments and CDN delivery.
 * **Nutrition API Integration:** Connect third-party nutrition APIs (e.g., Spoonacular / Edamam) to automatically compute calories and macronutrients per recipe.
 * **Social Sharing & Print Integration:** One-click recipe sharing to social platforms and print-formatted recipe PDF generation.
 * **Video Cooking Tutorials:** Add YouTube/Vimeo video embed capabilities to recipe creation forms.
 
 ---
+-
+
 
 ## 18. Author Information
 
